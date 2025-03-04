@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Transportation Method Solver</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2d;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #2b2b3d;
+            border-radius: 10px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 15px 30px rgba(0, 136, 204, 0.5);
+        }
+        h1 {
+            color: #00aaff;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            padding: 12px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border: 2px solid #00aaff;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+        button {
+            background-color: #00aaff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0088cc;
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.5);
+            transform: scale(1.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #444;
+            text-align: center;
+            color: #fff;
+        }
+        label {
+            margin-top: 15px;
+            display: block;
+            font-weight: bold;
+        }
+        h3 {
+            margin-top: 30px;
+            color: #00aaff;
+        }
+        .method-info {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #333;
+            border-left: 5px solid #00aaff;
+            border-radius: 5px;
+        }
+        .tooltip {
+            color: #fff;
+            border-bottom: 1px dotted #00aaff;
+            cursor: help;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Transportation Method Solver</h1>
+        <form method="POST" action="{% url 'solve_transportation' %}">
+            {% csrf_token %}
+            <label for="rows">Number of Suppliers:</label>
+            <input type="number" id="rows" name="rows" placeholder="Enter Number of Suppliers" required>
+
+            <label for="cols">Number of Consumers:</label>
+            <input type="number" id="cols" name="cols" placeholder="Enter Number of Consumers" required>
+
+            <div id="inputFields"></div>
+
+            <label for="transportation_method">Select Method <span class="tooltip" title="Select the transportation method to use for solving the problem">ℹ️</span>:</label>
+            <select name="transportation_method" id="transportation_method" required>
+                <option value="north_west">North West Corner</option>
+                <option value="least_cost">Least Cost Method</option>
+                <option value="vogel">Vogel's Approximation</option>
+            </select>
+
+            <div id="methodInfo" class="method-info"></div>
+
+            <button type="submit">Solve</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("rows").addEventListener("input", generateInputs);
+        document.getElementById("cols").addEventListener("input", generateInputs);
+        document.getElementById("transportation_method").addEventListener("change", showMethodInfo);
+
+        function generateInputs() {
+            let rows = document.getElementById("rows").value;
+            let cols = document.getElementById("cols").value;
+            let inputFields = document.getElementById("inputFields");
+            inputFields.innerHTML = "";
+
+            if (rows > 0 && cols > 0) {
+                inputFields.innerHTML += `<h3>Cost Matrix (Suppliers x Consumers)</h3><table>`;
+                for (let i = 0; i < rows; i++) {
+                    inputFields.innerHTML += `<tr>`;
+                    for (let j = 0; j < cols; j++) {
+                        inputFields.innerHTML += `<td><input type="number" name="cost_${i}_${j}" placeholder="Cost S${i+1} to C${j+1}" required></td>`;
+                    }
+                    inputFields.innerHTML += `</tr>`;
+                }
+                inputFields.innerHTML += `</table>`;
+
+                inputFields.innerHTML += `<h3>Supply for Each Supplier</h3><table><tr>`;
+                for (let i = 0; i < rows; i++) {
+                    inputFields.innerHTML += `<td><input type="number" name="supply_${i}" placeholder="Supply S${i+1}" required></td>`;
+                }
+                inputFields.innerHTML += `</tr></table>`;
+
+                inputFields.innerHTML += `<h3>Demand for Each Consumer</h3><table><tr>`;
+                for (let j = 0; j < cols; j++) {
+                    inputFields.innerHTML += `<td><input type="number" name="demand_${j}" placeholder="Demand C${j+1}" required></td>`;
+                }
+                inputFields.innerHTML += `</tr></table>`;
+            }
+        }
+
+        function showMethodInfo() {
+            const methodInfo = document.getElementById("methodInfo");
+            const method = document.getElementById("transportation_method").value;
+            const methodDescriptions = {
+                "north_west": "The North West Corner Method starts allocation from the top-left corner of the cost matrix and progresses towards the bottom-right.",
+                "least_cost": "The Least Cost Method prioritizes allocations in cells with the lowest costs to minimize the overall transportation cost.",
+                "vogel": "Vogel's Approximation Method uses penalty costs to find a near-optimal solution quickly, balancing supply and demand efficiently."
+            };
+            methodInfo.textContent = methodDescriptions[method] || "";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!-- lp_solver/templates/lp_solver/simplex_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Simplex Method</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Simplex Method Solver</h1>
+        <form method="POST" action="{% url 'solve_simplex' %}">
+            {% csrf_token %}
+            <!-- Implement Simplex-specific form fields here -->
+            <label for="simplex_input">Enter Simplex Table Data:</label>
+            <input type="text" name="simplex_input" placeholder="Enter Simplex Table Data" required>
+
+            <button type="submit">Solve</button>
+        </form>
+    </div>
+</body>
+</html>

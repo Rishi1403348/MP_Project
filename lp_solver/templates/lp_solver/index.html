@@ -1,0 +1,31 @@
+<!-- lp_solver/templates/lp_solver/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Linear Programming Solver</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Linear Programming Solver</h1>
+        <form method="POST" action="{% url 'solve_lp' %}">
+            {% csrf_token %}
+            <input type="number" name="obj_x" placeholder="Objective Coefficient for x" required>
+            <input type="number" name="obj_y" placeholder="Objective Coefficient for y" required>
+
+            <h3>Constraints</h3>
+            <input type="number" name="constraint_1_x" placeholder="Constraint 1: Coefficient for x" required>
+            <input type="number" name="constraint_1_y" placeholder="Constraint 1: Coefficient for y" required>
+            <input type="number" name="rhs_1" placeholder="Constraint 1: Right-hand side value" required>
+
+            <input type="number" name="constraint_2_x" placeholder="Constraint 2: Coefficient for x" required>
+            <input type="number" name="constraint_2_y" placeholder="Constraint 2: Coefficient for y" required>
+            <input type="number" name="rhs_2" placeholder="Constraint 2: Right-hand side value" required>
+
+            <button type="submit">Solve</button>
+        </form>
+    </div>
+</body>
+</html>

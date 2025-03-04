@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Graphical Method</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e2f;
+            color: #ddd;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        h1 {
+            color: #00bfff;
+            text-align: center;
+            margin-top: 20px;
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+        form {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+            margin: 40px auto;
+        }
+        label {
+            color: #00bfff;
+            font-weight: bold;
+        }
+        input {
+            padding: 10px;
+            border: 2px solid #00bfff;
+            border-radius: 8px;
+            background-color: #333;
+            color: #ddd;
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #00bfff;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: #00bfff;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #009acd;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 154, 205, 0.5);
+        }
+        @keyframes glow {
+            0% { color: #00bfff; }
+            100% { color: #009acd; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Graphical Method Solver</h1>
+    <form method="POST" action="{% url 'solve_graphical' %}">
+        {% csrf_token %}
+        <label for="obj_x">Objective Coefficient for x:</label>
+        <input type="number" name="obj_x" required>
+
+        <label for="obj_y">Objective Coefficient for y:</label>
+        <input type="number" name="obj_y" required>
+
+        <label for="constraint_1_x">Constraint 1: Coefficient for x:</label>
+        <input type="number" name="constraint_1_x" required>
+
+        <label for="constraint_1_y">Constraint 1: Coefficient for y:</label>
+        <input type="number" name="constraint_1_y" required>
+
+        <label for="rhs_1">Constraint 1: RHS:</label>
+        <input type="number" name="rhs_1" required>
+
+        <label for="constraint_2_x">Constraint 2: Coefficient for x:</label>
+        <input type="number" name="constraint_2_x" required>
+
+        <label for="constraint_2_y">Constraint 2: Coefficient for y:</label>
+        <input type="number" name="constraint_2_y" required>
+
+        <label for="rhs_2">Constraint 2: RHS:</label>
+        <input type="number" name="rhs_2" required>
+
+        <button type="submit">Solve</button>
+    </form>
+</body>
+</html>

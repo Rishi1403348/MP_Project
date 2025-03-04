@@ -1,0 +1,112 @@
+<!-- lp_solver/templates/lp_solver/form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Linear Programming Solver</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/script.js' %}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ method|title }} Solver</h1>
+
+        <!-- Method Selection -->
+        <form method="POST" action="{% url 'solve_lp' method %}">
+            {% csrf_token %}
+            
+            <!-- General Input Fields for All Methods -->
+            {% if method == "graphical" %}
+                <h3>Enter Objective Function and Constraints:</h3>
+                <label for="obj_x">Objective Coefficient for x:</label>
+                <input type="number" name="obj_x" required>
+
+                <label for="obj_y">Objective Coefficient for y:</label>
+                <input type="number" name="obj_y" required>
+
+                <label for="constraint_1_x">Constraint 1: Coefficient for x:</label>
+                <input type="number" name="constraint_1_x" required>
+
+                <label for="constraint_1_y">Constraint 1: Coefficient for y:</label>
+                <input type="number" name="constraint_1_y" required>
+
+                <label for="rhs_1">Constraint 1: RHS:</label>
+                <input type="number" name="rhs_1" required>
+
+                <label for="constraint_2_x">Constraint 2: Coefficient for x:</label>
+                <input type="number" name="constraint_2_x" required>
+
+                <label for="constraint_2_y">Constraint 2: Coefficient for y:</label>
+                <input type="number" name="constraint_2_y" required>
+
+                <label for="rhs_2">Constraint 2: RHS:</label>
+                <input type="number" name="rhs_2" required>
+
+            {% elif method == "simplex" %}
+                <h3>Simplex Method Input:</h3>
+                <!-- Simplex method specific inputs (this is a placeholder) -->
+                <label for="simplex_input">Enter Simplex Table Data (Example):</label>
+                <input type="text" name="simplex_input" placeholder="Simplex Table Data" required>
+
+            {% elif method == "transport" %}
+                <h3>Enter Matrix Size and Values for Transportation Method:</h3>
+                
+                <label for="rows">Number of Suppliers:</label>
+                <input type="number" id="rows" name="rows" required>
+
+                <label for="cols">Number of Consumers:</label>
+                <input type="number" id="cols" name="cols" required>
+
+                <div id="inputFields"></div>
+
+                <label for="transportation_method">Select Method:</label>
+                <select name="transportation_method" required>
+                    <option value="north_west">North West Corner</option>
+                    <option value="least_cost">Least Cost Method</option>
+                    <option value="vogel">Vogel's Approximation</option>
+                </select>
+
+            {% endif %}
+
+            <button type="submit">Solve</button>
+        </form>
+    </div>
+
+    <script>
+        // Dynamically generate input fields for Transportation Method
+        document.getElementById("rows").addEventListener("input", generateInputs);
+        document.getElementById("cols").addEventListener("input", generateInputs);
+
+        function generateInputs() {
+            let rows = document.getElementById("rows").value;
+            let cols = document.getElementById("cols").value;
+            let inputFields = document.getElementById("inputFields");
+            inputFields.innerHTML = "";
+
+            // Create inputs for cost matrix, supply, and demand
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    inputFields.innerHTML += `
+                        <label>Cost from Supplier ${i+1} to Consumer ${j+1}:</label>
+                        <input type="number" name="cost_${i}_${j}" required>
+                    `;
+                }
+            }
+
+            for (let i = 0; i < rows; i++) {
+                inputFields.innerHTML += `
+                    <label>Supply for Supplier ${i+1}:</label>
+                    <input type="number" name="supply_${i}" required>
+                `;
+            }
+
+            for (let j = 0; j < cols; j++) {
+                inputFields.innerHTML += `
+                    <label>Demand for Consumer ${j+1}:</label>
+                    <input type="number" name="demand_${j}" required>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

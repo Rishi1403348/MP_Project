@@ -1,0 +1,27 @@
+<!-- lp_solver/templates/lp_solver/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Choose LP Method</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/script.js' %}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Select a Linear Programming Method</h1>
+        <div class="mode-toggle">
+            <label class="switch">
+                <input type="checkbox" id="dark-mode-toggle">
+                <span class="slider"></span>
+            </label>
+            <span>Light Mode</span>
+        </div>
+        <div class="options">
+            <a href="{% url 'form' 'graphical' %}" class="option-card graphical">Graphical Representation</a>
+            <a href="{% url 'form' 'simplex' %}" class="option-card simplex">Simplex Method</a>
+            <a href="{% url 'form' 'transport' %}" class="option-card transport">Transportation Method</a>
+        </div>
+    </div>
+</body>
+</html>
