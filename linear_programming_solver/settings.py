@@ -1,5 +1,3 @@
-Here’s the complete and corrected settings.py code for your Django project:
-
 """
 Django settings for linear_programming_solver project.
 
